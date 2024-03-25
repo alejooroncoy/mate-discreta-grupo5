@@ -21,6 +21,6 @@ class MenuScreen(Screen):
         button_credits.place(relx =0.5, rely=0.3, anchor=ctk.CENTER)
         button_credits.pack(padx=10, pady=10)
 
-        button_leave = ctk.CTkButton(self,text="Salir");
-        button_leave.place(relx =0.5, rely=0.2, anchor=ctk.CENTER, command=sys.exit())
+        button_leave = ctk.CTkButton(self,text="Salir", command=lambda: sys.exit());
+        button_leave.place(relx =0.5, rely=0.2, anchor=ctk.CENTER)
         button_leave.pack(padx=10, pady=10)
