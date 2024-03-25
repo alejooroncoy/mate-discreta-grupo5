@@ -9,7 +9,7 @@ class App(ctk.CTk):
         self.screens = {}
         self.geometry(f"{self.width}x{self.height}")
         self.title("Generador de árboles 🌲")
-        ctk.set_appearance_mode("system")
+        ctk.set_appearance_mode("dark")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
     
@@ -18,7 +18,9 @@ class App(ctk.CTk):
             s.grid_remove(self)
             
         screen = self.screens[container]
+        ctk.CTkButton(screen, text="Recargar", command=lambda: self.update())
         screen.show()
+        
 
     def default_screen(self, Screen): 
       self.add_screen(Screen)
