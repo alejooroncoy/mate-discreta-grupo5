@@ -1,3 +1,5 @@
+anytree==2.12.1
 customtkinter==5.2.2
 darkdetect==0.8.0
 packaging==24.0
+six==1.16.0
