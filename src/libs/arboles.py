@@ -11,32 +11,40 @@
 # 
 # 
 
+#TO-DO:   DETERMINAR LEFT - DATA - RIGHT
+
+
 from anytree import Node, RenderTree
 import random
 
 def nodos_arbol():
-    n_totales = random.randint(10,15)
+    n_totales = random.randint(10,16)
     
     return n_totales
 
 def hijos_nodos():
-    hijos = random.randint(2,4)
-    return hijos
+        hijos = random.randint(2,4)
+        return hijos
 
-def arbol(cantidad_nodos, hijos_cada_nodo):
+def n_arbol(cantidad_nodos, hijos_cada_nodo, is_bin):
     root = Node("R") # Raiz
     nodos = []
     parentsPossibles = []
     parent = root
-    
+    nodo = hijos_cada_nodo
+    if (is_bin.lower() == "t"):  
+        nodo = 2
+    else:
+        pass
+
     for i in range(cantidad_nodos): 
         
-        if len(parent.children) < hijos_cada_nodo:
+        if len(parent.children) < nodo:
             nodoActual = Node(i+1, parent=parent)
             nodos.append(nodoActual)
             parentsPossibles.append(nodoActual)
         else:
-            parent = parentsPossibles[0]
+            parent = parentsPossibles[0]   #mover el parent a el siguiente nodo
             parentsPossibles.pop(0)
             nodoActual = Node(i+1, parent=parent)
             nodos.append(nodoActual)
@@ -45,8 +53,10 @@ def arbol(cantidad_nodos, hijos_cada_nodo):
     return root
 
 cantidad_nodos = nodos_arbol()
-hijos_cada_nodo = hijos_nodos()
-root = arbol(cantidad_nodos, hijos_cada_nodo)
+hijos_cada_nodo = hijos_nodos() 
+ask_bin = input(f"Arbol binario? (T or F): ")
+root = n_arbol(cantidad_nodos, hijos_cada_nodo, ask_bin)
 
 for pre, _, node in RenderTree(root):
     print("%s%s" % (pre, node.name))
+    
