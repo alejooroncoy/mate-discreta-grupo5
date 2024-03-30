@@ -7,3 +7,4 @@ class Screen(ctk.CTkFrame):
 
     def show(self):
         self.grid(row=0, column=0, sticky="nsew")
+        # self.
