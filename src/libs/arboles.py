@@ -7,15 +7,17 @@
 # - Trazar su dígrafo.
 # - Determinar su árbol B(T).
 # - Determinar el arreglo LEFT - FATA - RIGHT
-# - Que aplicaciones tiene el arreglo LEFT - DATA - RIGHT en el contexto real
-# 
-# 
+# - Que aplicaciones tiene el arreglo LEFT - DATA - RIGHT en el contexto reaL
+
 
 #TO-DO:   DETERMINAR LEFT - DATA - RIGHT
 
-
+#import os --------> CREAR LA IMAGEN DEL ARBOL
 from anytree import Node, RenderTree
+from anytree.exporter import UniqueDotExporter # esto
 import random
+
+#os.environ["PATH"] += os.pathsep + 'C:\\Program Files\\Graphviz\\bin' --------> CREAR LA IMAGEN DEL ARBOL
 
 def nodos_arbol():
     n_totales = random.randint(10,16)
@@ -25,6 +27,36 @@ def nodos_arbol():
 def hijos_nodos():
         hijos = random.randint(2,4)
         return hijos
+
+def mucha_magia(root: Node):
+    
+    result = "R = { "
+    parent = root
+    childActual: Node = root.children[0]
+    parentsPossibles = []
+    
+    while childActual != None:
+      result += f"({parent.name}, {childActual.name})"
+      
+      parentsPossibles.append(childActual)
+      
+      n = slice(parent.children.index(childActual) + 1, parent.children.__len__())
+  
+      
+      childActual = parent.children[n][0] if parent.children[n].__len__() > 0  else None
+      
+      if childActual == None:
+        parent = parentsPossibles[0]
+        parentsPossibles.pop(0)
+        childActual = parent.children[0] if parent.children.__len__() > 0 else None
+        result += "" if childActual == None else ", "
+        
+      else:
+        result += ", "
+      
+    result += " }"
+    
+    return result
 
 def n_arbol(cantidad_nodos, hijos_cada_nodo, is_bin):
     root = Node("R") # Raiz
@@ -52,11 +84,15 @@ def n_arbol(cantidad_nodos, hijos_cada_nodo, is_bin):
             
     return root
 
-cantidad_nodos = nodos_arbol()
-hijos_cada_nodo = hijos_nodos() 
+nodos = []       # almacendar nodos
+cantidad_nodos = nodos_arbol()    #dato de numero maximo de nodos
+hijos_cada_nodo = hijos_nodos()   # numero maximo de hijos
 ask_bin = input(f"Arbol binario? (T or F): ")
 root = n_arbol(cantidad_nodos, hijos_cada_nodo, ask_bin)
 
 for pre, _, node in RenderTree(root):
     print("%s%s" % (pre, node.name))
     
+print(mucha_magia(root))    
+
+#UniqueDotExporter(root).to_picture("arbol.png") --------> CREAR LA IMAGEN DEL ARBOL
