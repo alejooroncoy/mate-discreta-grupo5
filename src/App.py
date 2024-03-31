@@ -1,5 +1,7 @@
 import customtkinter as ctk
 
+ctk.set_default_color_theme("src/theme/custom.json")
+ctk.set_appearance_mode("dark")
 
 class App(ctk.CTk):
     def __init__(self, *args, **kwargs):
@@ -9,23 +11,23 @@ class App(ctk.CTk):
         self.screens = {}
         self.geometry(f"{self.width}x{self.height}")
         self.title("Generador de árboles 🌲")
-        ctk.set_appearance_mode("dark")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-    
+        
+        print(self.cget("fg_color"))
+        
     def show_screen(self, container):
-        for s in self.screens:
-            s.grid_remove(self)
+        for s in self.screens.values():
+            s.grid_remove()
             
         screen = self.screens[container]
-        ctk.CTkButton(screen, text="Recargar", command=lambda: self.update())
         screen.show()
         
 
     def default_screen(self, Screen): 
       self.add_screen(Screen)
-      self.show_screen(Screen)
+      self.show_screen(Screen.__name__)
 
     def add_screen(self, Screen):
         screen = Screen(self, self)
-        self.screens[Screen] = screen
+        self.screens[Screen.__name__] = screen
