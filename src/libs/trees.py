@@ -33,10 +33,8 @@ def n_tree(amount_nodes, children_each_node, is_bin):
     parent = root
     node = children_each_node
     
-    if (is_bin.lower() == "t"):  
+    if (is_bin):  
         node = 2
-    else:
-        pass
 
     for i in range(amount_nodes): 
         
@@ -53,9 +51,58 @@ def n_tree(amount_nodes, children_each_node, is_bin):
             
     return root
 
+def forEachNodes(root, cb):
+    parent = root
+    childActual: Node = root.children[0]
+    parentsPossibles = []
+    
+    while childActual != None:
+      parentsPossibles.append(childActual)
+      
+      n = slice(parent.children.index(childActual) + 1, parent.children.__len__())
+  
+      childActual = parent.children[n][0] if parent.children[n].__len__() > 0 else None
+      
+      cb(parent, childActual)
+      
+      if childActual == None:
+        parent = parentsPossibles[0]
+        parentsPossibles.pop(0)
+        childActual = parent.children[0] if parent.children.__len__() > 0 else None
+        
 def create_tree(is_bin = False):
     amount_nodes = nodes_tree()
     children_each_node = children_nodes()
     root = n_tree(amount_nodes, children_each_node, is_bin)
+    root.forEach = lambda cb: forEachNodes(cb)
+    
     return root
     
+def tree_for_extension(root: Node):
+    
+    result = "R = { "
+    parent = root
+    childActual: Node = root.children[0]
+    parentsPossibles = []
+    
+    while childActual != None:
+      result += f"({parent.name}, {childActual.name})"
+      
+      parentsPossibles.append(childActual)
+      
+      n = slice(parent.children.index(childActual) + 1, parent.children.__len__())
+  
+      childActual = parent.children[n][0] if parent.children[n].__len__() > 0  else None
+      
+      if childActual == None:
+        parent = parentsPossibles[0]
+        parentsPossibles.pop(0)
+        childActual = parent.children[0] if parent.children.__len__() > 0 else None
+        result += "" if childActual == None else ", "
+        
+      else:
+        result += ", "
+      
+    result += " }"
+    
+    return result

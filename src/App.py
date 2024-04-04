@@ -10,17 +10,17 @@ class App(ctk.CTk):
         self.height = 500
         self.screens = {}
         self.geometry(f"{self.width}x{self.height}")
-        self.title("Generador de árboles 🌲")
+        self.title("GenTree 🌲")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
-        print(self.cget("fg_color"))
         
     def show_screen(self, container):
         for s in self.screens.values():
             s.grid_remove()
             
         screen = self.screens[container]
+        screen.load()
         screen.show()
         
 

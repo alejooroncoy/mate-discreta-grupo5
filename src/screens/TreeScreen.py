@@ -2,11 +2,15 @@ from bases.Screen import Screen
 import customtkinter as ctk
 import tkinter
 from utils.fonts import getFont
+from libs.trees import create_tree
 
 class TreeScreen(Screen):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
-        self.paint()
+
+    def load(self):
+        tree = create_tree()
+        print(tree)
         
     def paint(self):
         label_info = ctk.CTkLabel(self, text="R={}...",font=getFont(size=20, weight="bold"))
