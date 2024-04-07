@@ -13,12 +13,11 @@
 
 #TO-DO:   DETERMINAR LEFT - DATA - RIGHT
 
-
-from anytree import Node
+from anytree import Node, RenderTree
 import random
 
 def nodes_tree():
-    n_total = random.randint(10,16)
+    n_total = random.randint(10,15)
     
     return n_total
 
@@ -26,32 +25,35 @@ def children_nodes():
         children = random.randint(2,4)
         return children
 
-def n_tree(amount_nodes, children_each_node, is_bin):
+def n_tree(amount_nodes, max_children_each_node):
     root = Node("R") # Raiz
     nodes = []
     parentsPossibles = []
     parent = root
-    node = children_each_node
+    maxReached = False
     
-    if (is_bin):  
-        node = 2
-
     for i in range(amount_nodes): 
         
-        if len(parent.children) < node:
+        children_each_node = random.randint(int(parent == root), max_children_each_node) + int(not maxReached)*(i == amount_nodes - 1)*(max_children_each_node)
+        
+        maxReached = children_each_node == max_children_each_node
+        
+        if len(parent.children) < children_each_node:
             nodoCurrently = Node(i+1, parent=parent)
             nodes.append(nodoCurrently)
             parentsPossibles.append(nodoCurrently)
-        else:
+            
+        elif len(parentsPossibles) > 0:
+            
             parent = parentsPossibles[0]   #mover el parent a el siguiente nodo
             parentsPossibles.pop(0)
             nodoCurrently = Node(i+1, parent=parent)
             nodes.append(nodoCurrently)
             parentsPossibles.append(nodoCurrently)
             
-    return root
+    return root      
 
-def forEachNodes(root, cb):
+def for_each_nodes(root: Node, cb):
     parent = root
     childActual: Node = root.children[0]
     parentsPossibles = []
@@ -59,22 +61,66 @@ def forEachNodes(root, cb):
     while childActual != None:
       parentsPossibles.append(childActual)
       
-      n = slice(parent.children.index(childActual) + 1, parent.children.__len__())
+      n = slice(parent.children.index(childActual) + 1, len(parent.children))
   
-      childActual = parent.children[n][0] if parent.children[n].__len__() > 0 else None
+      cb(childActual, parent)
       
-      cb(parent, childActual)
+      childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
       
       if childActual == None:
         parent = parentsPossibles[0]
         parentsPossibles.pop(0)
-        childActual = parent.children[0] if parent.children.__len__() > 0 else None
+        childActual = parent.children[0] if len(parent.children) > 0 else None
         
-def create_tree(is_bin = False):
+        
+def n_tree_binary(root_base: Node):
+    root = Node("R") # Raiz
+    nodes = []
+    parentActual = root
+    parentsPossibles = [parentActual]
+    
+    parentActualOld = None
+    # stackToRight: List[Tuple[Node, Node]] = []
+
+    def callbackNode (nodeActual: Node, parent: Node):
+        nonlocal parentActualOld, parentsPossibles, parentActual
+        
+        if parent == parentActualOld:
+            node = Node(nodeActual.name, parent=parentActual)
+            
+        else:
+            print(nodeActual)
+            node = Node(nodeActual.name, parent=parentActual)
+
+
+        parentsPossibles.append(node)
+        
+        parentActual = node
+        
+        parentActualOld = parent
+        # print(nodeActual)
+    
+    for_each_nodes(root_base, callbackNode)
+    
+    # for i in range(amount_nodes): 
+    #     nodeCurrently = Node(i+1, parent=parent)
+    #     # nodes.append(nodeCurrently)
+    #     parentsPossibles.append(nodeCurrently)
+    #     parent = parentsPossibles[0]
+    #     stackToRight.append(nodeCurrently)
+    for pre, fill, node in RenderTree(root_base):
+        print("%s%s" % (pre, node.name))
+    for pre, fill, node in RenderTree(root):
+        print("%s%s" % (pre, node.name))
+        
+    
+        
+        
+        
+def create_tree():
     amount_nodes = nodes_tree()
     children_each_node = children_nodes()
-    root = n_tree(amount_nodes, children_each_node, is_bin)
-    root.forEach = lambda cb: forEachNodes(cb)
+    root = n_tree(amount_nodes, children_each_node)
     
     return root
     
@@ -90,14 +136,14 @@ def tree_for_extension(root: Node):
       
       parentsPossibles.append(childActual)
       
-      n = slice(parent.children.index(childActual) + 1, parent.children.__len__())
+      n = slice(parent.children.index(childActual) + 1, len(parent.children))
   
-      childActual = parent.children[n][0] if parent.children[n].__len__() > 0  else None
+      childActual = parent.children[n][0] if len(parent.children[n]) > 0  else None
       
       if childActual == None:
         parent = parentsPossibles[0]
         parentsPossibles.pop(0)
-        childActual = parent.children[0] if parent.children.__len__() > 0 else None
+        childActual = parent.children[0] if len(parent.children) > 0 else None
         result += "" if childActual == None else ", "
         
       else:

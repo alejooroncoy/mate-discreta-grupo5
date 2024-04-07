@@ -13,11 +13,14 @@ class MenuScreen(Screen):
     
     def paint(self):
         
-        title = ctk.CTkLabel(self, text="GenTree", font=getFont(size=50, weight="bold"  ))
-        title.pack(anchor=ctk.N, pady=60)
+        container = ctk.CTkFrame(self, fg_color="transparent")
+        container.pack(expand=True)
         
-        containerButtons = ctk.CTkFrame(self, fg_color="transparent")
-        containerButtons.pack(side=ctk.LEFT, padx=40, anchor=ctk.N, pady=20)
+        title = ctk.CTkLabel(container, text="TreeTrack Pro", font=getFont(size=50, weight="bold"  ))
+        title.pack(anchor=ctk.N)
+        
+        containerButtons = ctk.CTkFrame(container, fg_color="transparent")
+        containerButtons.pack(padx=40, anchor=ctk.N, pady=15)
         
         button_tree = ctk.CTkButton(containerButtons, text="Generar árbol", command=lambda: self.controller.show_screen("TreeScreen"), font=getFont(size=13), height=35)
         button_tree.pack(pady=10)

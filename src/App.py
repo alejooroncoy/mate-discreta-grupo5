@@ -20,7 +20,7 @@ class App(ctk.CTk):
             s.grid_remove()
             
         screen = self.screens[container]
-        screen.load()
+        
         screen.show()
         
 
