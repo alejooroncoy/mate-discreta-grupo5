@@ -22,7 +22,7 @@ class TreeScreen(Screen):
         UniqueDotExporter(self.tree).to_picture(self.path_tree)
         
     def change_to_binary(self):
-        self.tree = create_tree()
+        # self.tree = create_tree()
         n_tree_binary(self.tree)
     
 
@@ -35,6 +35,9 @@ class TreeScreen(Screen):
         for_extension = tree_for_extension(self.tree)
         
         container = ctk.CTkFrame(self, fg_color="transparent")
+        
+        self.label_t = ctk.CTkLabel(container, text=f"Árbol T-{self.tree.get_n()}", font=getFont(size=25, weight="bold"))
+        self.label_t.pack(pady=5, padx=10)
         
         self.label_info = ctk.CTkLabel(container, text=for_extension,font=getFont(size=20, weight="bold"), wraplength=self.controller.winfo_reqwidth() - 70)
         self.label_info.pack(pady=10, padx=10)
@@ -64,6 +67,8 @@ class TreeScreen(Screen):
     def update(self):
         for_extension = tree_for_extension(self.tree)
         self.label_info.configure(text=for_extension)
+        self.label_t.configure(text=f"Árbol T-{self.tree.get_n()}")
+        
         self.path_tree = self.generate_path_tree()
         UniqueDotExporter(self.tree).to_picture(self.path_tree)
         

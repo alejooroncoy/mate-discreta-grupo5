@@ -14,6 +14,7 @@
 #TO-DO:   DETERMINAR LEFT - DATA - RIGHT
 
 from anytree import Node, RenderTree
+from anytree.exporter import UniqueDotExporter
 import random
 
 def nodes_tree():
@@ -31,17 +32,16 @@ def n_tree(amount_nodes, max_children_each_node):
     parentsPossibles = []
     parent = root
     maxReached = False
+   
+    children_each_node = random.randint(int(parent == root), max_children_each_node)
     
     for i in range(amount_nodes): 
-        
-        children_each_node = random.randint(int(parent == root), max_children_each_node) + int(not maxReached)*(i == amount_nodes - 1)*(max_children_each_node)
-        
-        maxReached = children_each_node == max_children_each_node
         
         if len(parent.children) < children_each_node:
             nodoCurrently = Node(i+1, parent=parent)
             nodes.append(nodoCurrently)
             parentsPossibles.append(nodoCurrently)
+            
             
         elif len(parentsPossibles) > 0:
             
@@ -50,6 +50,12 @@ def n_tree(amount_nodes, max_children_each_node):
             nodoCurrently = Node(i+1, parent=parent)
             nodes.append(nodoCurrently)
             parentsPossibles.append(nodoCurrently)
+            
+            children_each_node = random.randint(int(parent == root), max_children_each_node)
+            if not maxReached and i + max_children_each_node * 2 > amount_nodes:
+                children_each_node = max_children_each_node
+            
+            maxReached = children_each_node == max_children_each_node
             
     return root      
 
@@ -60,10 +66,9 @@ def for_each_nodes(root: Node, cb):
     
     while childActual != None:
       parentsPossibles.append(childActual)
-      
-      n = slice(parent.children.index(childActual) + 1, len(parent.children))
-  
       cb(childActual, parent)
+    
+      n = slice(parent.children.index(childActual) + 1, len(parent.children))
       
       childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
       
@@ -77,50 +82,43 @@ def n_tree_binary(root_base: Node):
     root = Node("R") # Raiz
     nodes = []
     parentActual = root
-    parentsPossibles = [parentActual]
-    
+    parentsPossibles = []
+    siblingsRight = []
+    siblingRight = None
     parentActualOld = None
-    # stackToRight: List[Tuple[Node, Node]] = []
 
     def callbackNode (nodeActual: Node, parent: Node):
-        nonlocal parentActualOld, parentsPossibles, parentActual
+        nonlocal parentActualOld, parentsPossibles, parentActual, siblingsRight, siblingRight
         
-        if parent == parentActualOld:
-            node = Node(nodeActual.name, parent=parentActual)
-            
-        else:
-            print(nodeActual)
-            node = Node(nodeActual.name, parent=parentActual)
-
-
-        parentsPossibles.append(node)
-        
-        parentActual = node
-        
+        if len(parentsPossibles) > 0 and parent != parentActualOld:
+          parentActualAux = parentActual
+          parentActual = parentsPossibles.pop(0)
+          parentActual.parent = parentActualAux 
+          #  siblingsRight.append((nodeActual.name, parentActual))
+        else: 
+          node = Node(name=nodeActual.name)
+          parentsPossibles.append(node)
+          parentActual = node
+          
         parentActualOld = parent
-        # print(nodeActual)
+        # mkdfmdk
+        print(nodeActual, parent)
+        
+        
     
     for_each_nodes(root_base, callbackNode)
     
-    # for i in range(amount_nodes): 
-    #     nodeCurrently = Node(i+1, parent=parent)
-    #     # nodes.append(nodeCurrently)
-    #     parentsPossibles.append(nodeCurrently)
-    #     parent = parentsPossibles[0]
-    #     stackToRight.append(nodeCurrently)
-    for pre, fill, node in RenderTree(root_base):
-        print("%s%s" % (pre, node.name))
-    for pre, fill, node in RenderTree(root):
-        print("%s%s" % (pre, node.name))
-        
     
-        
-        
+    UniqueDotExporter(root).to_picture("./tree-pro/pepepe.png")
+    # for pre, fill, node in RenderTree(root):
+    #     print("%s%s" % (pre, node.name))
         
 def create_tree():
     amount_nodes = nodes_tree()
     children_each_node = children_nodes()
     root = n_tree(amount_nodes, children_each_node)
+    
+    root.get_n = lambda: children_each_node
     
     return root
     
