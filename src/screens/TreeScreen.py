@@ -1,9 +1,10 @@
 from bases.Screen import Screen
 import customtkinter as ctk
+from screens.BinaryScreen import BinaryScreen
 from utils.fonts import getFont
 from random import random
 from PIL import Image
-from libs.trees import create_tree, tree_for_extension,n_tree_binary
+from libs.trees import create_tree, tree_for_extension
 from anytree.exporter import UniqueDotExporter
 from utils.createFolder import create_folder
 
@@ -23,7 +24,9 @@ class TreeScreen(Screen):
         
     def change_to_binary(self):
         # self.tree = create_tree()
-        n_tree_binary(self.tree)
+        # n_tree_binary(self.tree)
+        self.binaryScreen = BinaryScreen(self.controller, self.tree)
+        # self.binaryScreen.focus()
     
 
     def create_new_tree(self):
