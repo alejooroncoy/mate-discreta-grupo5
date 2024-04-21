@@ -24,31 +24,29 @@ def children_nodes():
   children = random.randint(2,4)
   return children
 
+
 def n_tree(amount_nodes, max_children_each_node):
   root = Node("R")
-  nodes = []
   parentsPossibles = []
   parent = root
   maxReached = False
   
-  children_each_node = random.randint(int(parent == root), max_children_each_node)
+  children_each_node = random.randint(1, max_children_each_node)
   
   for i in range(amount_nodes):
     
     if len(parent.children) < children_each_node:
       nodoCurrently = Node(i+1, parent=parent)
-      nodes.append(nodoCurrently)
       parentsPossibles.append(nodoCurrently)
-      
+    
     elif len(parentsPossibles) > 0:
       
-      parent = parentsPossibles[0]
-      parentsPossibles.pop(0)
+      parent = parentsPossibles.pop(0)
       nodoCurrently = Node(i+1, parent=parent)
-      nodes.append(nodoCurrently)
       parentsPossibles.append(nodoCurrently)
       
       children_each_node = random.randint(int(parent == root), max_children_each_node)
+      
       if not maxReached and i + max_children_each_node * 2 > amount_nodes:
         children_each_node = max_children_each_node
         
@@ -78,12 +76,10 @@ def n_tree_binary(root_base: Node):
   root = Node("R")
   parentActual = root
   parentsPossibles = []
-  siblingsRight = []
-  siblingRight = None
   parentActualOld = None
   
   def callbackNode (nodeActual: Node, parent: Node):
-    nonlocal parentActualOld, parentsPossibles, parentActual, siblingsRight, siblingRight
+    nonlocal parentActualOld, parentsPossibles, parentActual
     
     if len(parentsPossibles) > 0 and parent != parentActualOld:
       parentActual = parentsPossibles.pop(0)
@@ -129,7 +125,7 @@ def tree_for_extension(root: Node):
     
     n = slice(parent.children.index(childActual) + 1, len(parent.children))
     
-    childActual = parent.children[n][0] if len(parent.children[n]) > 0  else None
+    childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
     
     if childActual == None:
       parent = parentsPossibles[0]

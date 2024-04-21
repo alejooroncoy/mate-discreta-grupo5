@@ -8,6 +8,7 @@ class BinaryScreen(ctk.CTkToplevel):
   def __init__(self, parent, treeOriginal):
     super().__init__(parent)
     self.parent = parent
+    self.title("Árbol binario")
     self.geometry("500x500")
     self.attributes("-topmost", True)
     self.tree = treeOriginal
