@@ -125,11 +125,15 @@ def tree_for_extension(root: Node):
     
     n = slice(parent.children.index(childActual) + 1, len(parent.children))
     
+    childActualAux = childActual
     childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
     
     if childActual == None:
-      parent = parentsPossibles[0]
-      parentsPossibles.pop(0)
+      parent = parentsPossibles.pop(0)
+      
+      while len(parent.children) == 0 and len(parentsPossibles) > 0:
+        parent = parentsPossibles.pop(0)
+      
       childActual = parent.children[0] if len(parent.children) > 0 else None
       result += "" if childActual == None else ", "
     
