@@ -18,11 +18,11 @@ import random
 
 def nodes_tree():
   n_total = random.randint(10,15)
-  return 10
+  return n_total
 
 def children_nodes():
   children = random.randint(2,4)
-  return 4
+  return children
 
 
 def n_tree(amount_nodes, max_children_each_node):
@@ -80,7 +80,7 @@ def n_tree_binary(root_base: Node):
   root = AnyNode(name="R", idx=idx, left=None, right=None)
   idx += 1
   parentActual = root
-  parentsPossibles = []
+  parentsPossibles = [root]
   parentActualOld = None
   
   def callbackNode (nodeActual: Node, parent: Node):
@@ -102,11 +102,11 @@ def n_tree_binary(root_base: Node):
         parentActual.left = node
         
       else:
-        parentActual.right = node
+        parentActual.left = node
     
     else:
       node = AnyNode(name=nodeActual.name, parent= parentActual, left=None, right=None, idx=idx)
-      parentActual.left = node
+      parentActual.right = node
     
     parentsPossibles.append(node)
     parentActual = node

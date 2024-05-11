@@ -11,7 +11,7 @@ class LeftDataRightScreen(ctk.CTkToplevel):
     self.attributes("-topmost", True)
     self.tree = treeOriginal
     self.paint()
-    self.iconbitmap("src/assets/logo.ico")
+    self.iconbitmap("src/assets/logo.ico", "src/assets/logo.ico")
   
   def paint(self):
     headers = ["Indice", "Left", "Data", "Right"]

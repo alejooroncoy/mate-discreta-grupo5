@@ -13,7 +13,7 @@ class App(ctk.CTk):
         self.title("TreeTrack Pro 🌲")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.iconbitmap("src/assets/logo.ico")
+        self.iconbitmap("src/assets/logo.ico", "src/assets/logo.ico")
         
         
     def show_screen(self, container):
