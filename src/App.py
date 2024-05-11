@@ -10,9 +10,10 @@ class App(ctk.CTk):
         self.height = 500
         self.screens = {}
         self.geometry(f"{self.width}x{self.height}")
-        self.title("GenTree 🌲")
+        self.title("TreeTrack Pro 🌲")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
+        self.iconbitmap("src/assets/logo.ico")
         
         
     def show_screen(self, container):

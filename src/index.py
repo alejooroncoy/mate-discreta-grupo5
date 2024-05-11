@@ -15,4 +15,4 @@ app.add_screen(InstructionsScreen)
 app.add_screen(CreditsScreen)
 app.add_screen(TreeScreen)
 
-run_with_reloader(app, "<Control-R>", "<Control-r>")
+run_with_reloader(app, "<Control-R>", "<Control-r>", "<F5>")

@@ -1,37 +1,43 @@
 from bases.Screen import Screen
 import customtkinter as ctk
 from screens.BinaryScreen import BinaryScreen
+from screens.LeftDataRightScreen import LeftDataRightScreen
 from utils.fonts import getFont
-from random import random
 from PIL import Image
-from libs.trees import create_tree, tree_for_extension
+from libs.trees import create_tree, tree_for_extension, n_tree_binary
 from anytree.exporter import UniqueDotExporter
 from utils.createFolder import create_folder
 
 class TreeScreen(Screen):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
+        self.binaryScreen = None
         
-    def generate_path_tree(self):
-        return f"./tree-pro/tree-pro-{hash(random() * 10.0)}.png"
+    def get_path_tree(self):
+        return f"./tree-pro/tree-pro-image.png"
     
     def load(self):
         create_folder()
         self.tree = create_tree()
-        self.path_tree = self.generate_path_tree()
+        self.path_tree = self.get_path_tree()
         
         UniqueDotExporter(self.tree).to_picture(self.path_tree)
         
     def change_to_binary(self):
-        # self.tree = create_tree()
-        # n_tree_binary(self.tree)
         self.binaryScreen = BinaryScreen(self.controller, self.tree)
-        # self.binaryScreen.focus()
+        self.binary = self.binaryScreen.binary
     
 
     def create_new_tree(self):
         self.tree = create_tree()
         self.update()
+        
+    def left_data_right(self):
+        if self.binaryScreen == None:
+            self.binary = n_tree_binary(self.tree)
+            
+        self.leftDataRight = LeftDataRightScreen(self.controller, self.binary)
+
         
     def paint(self):
         
@@ -56,8 +62,9 @@ class TreeScreen(Screen):
         btn1 = ctk.CTkButton(frame_options, text="Crear arbol binario", command=self.change_to_binary)
         btn1.grid(row=0, column=0, padx=10, pady=10)
 
-        btn2 = ctk.CTkButton(frame_options, text="Crear tabla \nLEFT-VALUE-RIGHT")
+        btn2 = ctk.CTkButton(frame_options, text="Crear tabla \nLEFT-DATA-RIGHT", command=self.left_data_right)
         btn2.grid(row=1, column=0, padx=10, pady=10)
+        
 
         btn3 = ctk.CTkButton(frame_options, text="Crear nuevo arbol", command=self.create_new_tree)
         btn3.grid(row=2, column=0, padx=10, pady=10)
@@ -72,7 +79,7 @@ class TreeScreen(Screen):
         self.label_info.configure(text=for_extension)
         self.label_t.configure(text=f"Árbol T-{self.tree.get_n()}")
         
-        self.path_tree = self.generate_path_tree()
+        self.path_tree = self.get_path_tree()
         UniqueDotExporter(self.tree).to_picture(self.path_tree)
         
         self.image.configure(image=ctk.CTkImage(light_image=Image.open(self.path_tree), dark_image=Image.open(self.path_tree), size=(155 * 16 / 9, 160 * 16 / 9)))

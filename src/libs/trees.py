@@ -1,4 +1,4 @@
-from anytree import Node
+from anytree import Node, AnyNode
 import random
 
 
@@ -18,11 +18,11 @@ import random
 
 def nodes_tree():
   n_total = random.randint(10,15)
-  return n_total
+  return 10
 
 def children_nodes():
   children = random.randint(2,4)
-  return children
+  return 4
 
 
 def n_tree(amount_nodes, max_children_each_node):
@@ -54,7 +54,7 @@ def n_tree(amount_nodes, max_children_each_node):
       
   return root
 
-def for_each_nodes(root: Node, cb):
+def for_each_nodes(root, cb):
   parent = root
   childActual: Node = root.children[0]
   parentsPossibles = []
@@ -68,36 +68,52 @@ def for_each_nodes(root: Node, cb):
     childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
     
     if childActual == None:
-      parent = parentsPossibles[0]
-      parentsPossibles.pop(0)
+      parent = parentsPossibles.pop(0)
+      
+      while len(parent.children) == 0 and len(parentsPossibles) > 0:
+        parent = parentsPossibles.pop(0)
+      
       childActual = parent.children[0] if len(parent.children) > 0 else None
       
 def n_tree_binary(root_base: Node):
-  root = Node("R")
+  idx = 2
+  root = AnyNode(name="R", idx=idx, left=None, right=None)
+  idx += 1
   parentActual = root
   parentsPossibles = []
   parentActualOld = None
   
   def callbackNode (nodeActual: Node, parent: Node):
-    nonlocal parentActualOld, parentsPossibles, parentActual
+    nonlocal parentActualOld, parentsPossibles, parentActual, idx
     
     if len(parentsPossibles) > 0 and parent != parentActualOld:
       parentActual = parentsPossibles.pop(0)
       childToAgainPush = parentActual.children[0] if len(parentActual.children) > 0 else None
+      
       if childToAgainPush != None: 
         parentActual.children = []
         childToAgainPush.parent = None
       
-      node = Node(name=nodeActual.name, parent=parentActual)
-      if childToAgainPush != None: childToAgainPush.parent = parentActual
+      node = AnyNode(name=nodeActual.name, parent=parentActual, left=None, right=None, idx=idx)
+            
+      if childToAgainPush != None:
+        childToAgainPush.parent = parentActual
+        parentActual.right = childToAgainPush
+        parentActual.left = node
+        
+      else:
+        parentActual.right = node
     
     else:
-      node = Node(name=nodeActual.name, parent= parentActual)
+      node = AnyNode(name=nodeActual.name, parent= parentActual, left=None, right=None, idx=idx)
+      parentActual.left = node
     
     parentsPossibles.append(node)
     parentActual = node
     
     parentActualOld = parent
+    
+    idx += 1
   
   for_each_nodes(root_base, callbackNode)
   
@@ -113,6 +129,7 @@ def create_tree():
   return root
   
 def tree_for_extension(root: Node):
+  
   result = "R = { "
   parent = root
   childActual: Node = root.children[0]
@@ -124,8 +141,7 @@ def tree_for_extension(root: Node):
     parentsPossibles.append(childActual)
     
     n = slice(parent.children.index(childActual) + 1, len(parent.children))
-    
-    childActualAux = childActual
+
     childActual = parent.children[n][0] if len(parent.children[n]) > 0 else None
     
     if childActual == None:
@@ -144,3 +160,29 @@ def tree_for_extension(root: Node):
   
   return result
 
+def generate_ldr(root: AnyNode):
+
+  nodeColumns = [
+    [ 1, root.idx, 0, 0],
+    [ 2, int(isinstance(root.left, AnyNode)) and root.left.idx, 
+     root.name, 
+     int(isinstance(root.right, AnyNode)) and root.right.idx],
+  ]
+  
+  def read_node(node: AnyNode, _):
+    
+    nodeRow  = [
+      node.idx,
+      int(isinstance(node.left, AnyNode)) and node.left.idx,
+      node.name, 
+      int(isinstance(node.right, AnyNode)) and node.right.idx
+    ]
+
+    nodeColumns.append(nodeRow)
+    
+  for_each_nodes(root, read_node)
+  
+  
+  nodeColumns = sorted(nodeColumns, key=lambda nodeColumn: nodeColumn[0])
+  
+  return nodeColumns;

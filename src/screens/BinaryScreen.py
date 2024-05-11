@@ -13,6 +13,7 @@ class BinaryScreen(ctk.CTkToplevel):
     self.attributes("-topmost", True)
     self.tree = treeOriginal
     self.paint()
+    self.iconbitmap("src/assets/logo.ico")
   
   def paint(self):
     container = ctk.CTkFrame(self, fg_color="transparent")
@@ -32,7 +33,6 @@ class BinaryScreen(ctk.CTkToplevel):
     image = Image.open(self.path_tree)
     
     self.image_tree = ctk.CTkImage(light_image=Image.open(self.path_tree), dark_image=Image.open(self.path_tree), size=(image.width * 1 / 2.6, image.height * 1 / 2.6))
-        
         
     self.image = ctk.CTkLabel(container, image=self.image_tree, text="")
     self.image.pack(padx=20, pady=0)
